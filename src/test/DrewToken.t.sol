@@ -93,5 +93,11 @@ contract DrewTokenTest is DSTest {
             0,
             "Allowance should be 0 after transfer"
         );
+
+        cheats.expectRevert("ERC20: insufficient allowance");
+
+        // Attempt to transfer more tokens than the allowance allows
+        bool success = token.transferFrom(owner, recipient, 1);
+        assertTrue(!success, "Transfer should fail");
     }
 }
