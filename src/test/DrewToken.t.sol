@@ -1,10 +1,13 @@
 pragma solidity ^0.8.0;
 
 import "ds-test/test.sol";
+import "./CheatCodes.sol";
 import "../DrewToken.sol";
 
 contract DrewTokenTest is DSTest {
-    MyToken token;
+    CheatCodes cheats = CheatCodes(HEVM_ADDRESS);
+
+    DrewToken token;
     address owner;
     address recipient;
     address spender;
@@ -21,7 +24,7 @@ contract DrewTokenTest is DSTest {
         spender = address(
             uint160(uint(keccak256(abi.encodePacked("spender"))))
         );
-        token = new MyToken("My Token", "MYT", 18, initialSupply);
+        token = new DrewToken("DrewToken", "DRU", initialSupply);
     }
 
     function testGenerateNewTokens() public {
@@ -68,11 +71,27 @@ contract DrewTokenTest is DSTest {
         );
     }
 
-    // function testTransferFromApprovedThirdParty() public {
-    //     token.approve(spender, approvalAmount);
-    //     token.transferFrom(owner, recipient, approvalAmount, { from: spender });
-    //     assertEq(token.balanceOf(owner), initialSupply - approvalAmount, "Owner balance should be 950 after transfer");
-    //     assertEq(token.balanceOf(recipient), approvalAmount, "Recipient balance should be 50 after transfer");
-    //     assertEq(token.allowance(owner, spender), 0, "Allowance should be 0 after transfer");
-    // }
+    function testTransferFromApprovedThirdParty() public {
+        token.approve(spender, approvalAmount);
+
+        cheats.prank(spender);
+
+        token.transferFrom(owner, recipient, approvalAmount);
+
+        assertEq(
+            token.balanceOf(owner),
+            initialSupply - approvalAmount,
+            "Owner balance should be 950 after transfer"
+        );
+        assertEq(
+            token.balanceOf(recipient),
+            approvalAmount,
+            "Recipient balance should be 50 after transfer"
+        );
+        assertEq(
+            token.allowance(owner, spender),
+            0,
+            "Allowance should be 0 after transfer"
+        );
+    }
 }
