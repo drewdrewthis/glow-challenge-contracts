@@ -7,7 +7,9 @@ contract DrewToken is ERC20 {
         string memory name,
         string memory symbol,
         uint256 initialSupply
-    ) ERC20(name, symbol) {
-        _mint(msg.sender, initialSupply);
+    ) ERC20(name, symbol) {}
+
+    function safeMint(address to, uint256 amount) public {
+        _mint(to, amount);
     }
 }

@@ -25,18 +25,21 @@ contract DrewTokenTest is DSTest {
             uint160(uint(keccak256(abi.encodePacked("spender"))))
         );
         token = new DrewToken("DrewToken", "DRU", initialSupply);
+        token.safeMint(owner, initialSupply);
     }
 
     function testGenerateNewTokens() public {
+        token.safeMint(owner, initialSupply);
+
         assertEq(
             token.totalSupply(),
-            initialSupply,
-            "Total supply should be 1000"
+            initialSupply * 2,
+            "Total supply should be 2000"
         );
         assertEq(
             token.balanceOf(owner),
-            initialSupply,
-            "Owner balance should be 1000"
+            initialSupply * 2,
+            "Owner balance should be 2000"
         );
     }
 
