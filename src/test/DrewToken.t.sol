@@ -24,7 +24,7 @@ contract DrewTokenTest is DSTest {
         spender = address(
             uint160(uint(keccak256(abi.encodePacked("spender"))))
         );
-        token = new DrewToken("DrewToken", "DRU", initialSupply);
+        token = new DrewToken("DrewToken", "DRU");
         token.safeMint(owner, initialSupply);
     }
 
